@@ -1,0 +1,3 @@
+.env for testing
+MONGODB_URL='mongodb+srv://subhradeepnath2o_db_user:aL3pFuw7TxrIHp9d@cluster0.w0hoi8h.mongodb.net/crudApp'
+PORT=3006
