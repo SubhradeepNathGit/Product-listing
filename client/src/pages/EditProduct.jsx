@@ -10,6 +10,7 @@ const EditProduct = () => {
   const [loading, setLoading] = useState(true);
   const [imagePreview, setImagePreview] = useState(null);
   const [existingImage, setExistingImage] = useState(null);
+  const [isDragging, setIsDragging] = useState(false);
 
   const {
     register,
@@ -62,6 +63,45 @@ const EditProduct = () => {
     }
   }, [imageFile]);
 
+  // Drag and drop handlers
+  const handleDragEnter = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsDragging(true);
+  };
+
+  const handleDragLeave = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsDragging(false);
+  };
+
+  const handleDragOver = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+  };
+
+  const handleDrop = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsDragging(false);
+
+    const files = e.dataTransfer.files;
+    if (files && files[0]) {
+      const file = files[0];
+      
+      // Check if file is an image
+      if (file.type.startsWith('image/')) {
+        // Create a new FileList-like object
+        const dataTransfer = new DataTransfer();
+        dataTransfer.items.add(file);
+        setValue('image', dataTransfer.files);
+      } else {
+        alert('Please drop an image file (PNG, JPG, WEBP)');
+      }
+    }
+  };
+
   const onSubmit = async (data) => {
     try {
       setIsSubmitting(true);
@@ -79,11 +119,11 @@ const EditProduct = () => {
 
       await productApi.updateProduct(id, formData);
       
-      alert(' Product updated successfully!');
+      alert('Product updated successfully!');
       navigate(`/product/${id}`);
     } catch (err) {
       console.error('Error updating product:', err);
-      alert(err.response?.data?.message || ' Failed to update product. Please try again.');
+      alert(err.response?.data?.message || 'Failed to update product. Please try again.');
     } finally {
       setIsSubmitting(false);
     }
@@ -260,7 +300,17 @@ const EditProduct = () => {
                 </div>
               )}
 
-              <div className="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-gray-300 border-dashed rounded-lg hover:border-blue-400 transition">
+              <div
+                onDragEnter={handleDragEnter}
+                onDragOver={handleDragOver}
+                onDragLeave={handleDragLeave}
+                onDrop={handleDrop}
+                className={`mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-dashed rounded-lg transition ${
+                  isDragging
+                    ? 'border-blue-500 bg-blue-50'
+                    : 'border-gray-300 hover:border-blue-400'
+                }`}
+              >
                 <div className="space-y-2 text-center">
                   <svg
                     className="mx-auto h-12 w-12 text-gray-400"

@@ -35,7 +35,7 @@ const SearchBar = ({ searchTerm, setSearchTerm }) => {
           placeholder="Search products by name..."
           value={searchTerm}
           onChange={handleChange}
-          className="w-full pl-10 pr-10 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"
+          className="w-full pl-10 pr-10 py-3 border border-gray-300 rounded-full transition"
         />
 
         {/* Clear Button */}
